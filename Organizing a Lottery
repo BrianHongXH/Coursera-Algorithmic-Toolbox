@@ -1,0 +1,62 @@
+# Implement Merge Sort
+def merge_sort(A):
+    if len(A)==1:
+        return A
+    m = len(A)//2
+    left = merge_sort(A[:m])
+    right = merge_sort(A[m:])
+    res = merge(left,right)
+    return res
+
+
+def merge(left, right):
+    i,j=0,0
+    res=[]
+    while i < len(left) and j <len(right):
+        if left[i]<=right[j]:
+            res.append(left[i])
+            i += 1
+        else:
+            res.append(right[j])
+            j += 1
+    if left:
+        res += left[i:]
+    if right:
+        res += right[j:]
+    return res
+
+# Use Binary search to check how many elements in start and end array that are less than the point
+# We use 2 diffeerent versions of binary search for start and end array
+def binary_search_start(lst, p):
+    l = 0
+    r = len(lst)-1
+    while l<=r:
+        m = (l+r)//2
+        if lst[m] <= p:
+            l = m+1
+        else:
+            r = m-1
+    return l
+
+
+def binary_search_end(lst, p):
+    l = 0
+    r = len(lst)-1
+    while l<=r:
+        m = (l+r)//2
+        if lst[m] >= p:
+            r = m - 1
+        else:
+            l = m + 1
+    return r+1
+
+
+def points_cover(starts, ends, points):
+    res = []
+    sorted_starts = merge_sort(starts)
+    sorted_ends = merge_sort(ends)
+    for p in points:
+        m = binary_search_start(sorted_starts, p)
+        n = binary_search_end(sorted_ends, p)
+        res.append(m-n)
+    return res
